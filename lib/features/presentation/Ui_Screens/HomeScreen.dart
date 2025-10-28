@@ -1,4 +1,5 @@
 import 'package:country_flag/features/presentation/Controller/cubit/country_flag_cubit.dart';
+import 'package:country_flag/features/presentation/Ui_Screens/Detailes_Screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,7 +30,7 @@ class Homescreen extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       const Text(
                         'Loading countries...',
@@ -68,60 +69,76 @@ class Homescreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final country = data[index];
 
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // 🇲🇽 Flag image
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.network(
-                                country.flags?.png ?? '',
-                                height: 100,
-                                width: 140,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(
-                                      Icons.flag,
-                                      size: 50,
-                                      color: Colors.grey,
-                                    ),
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailesScreen(
+                                flagPng: data[index].flags?.png,
+                                countryName: data[index].name?.common,
+                                capital: data[index].capital?.first,
+                                region: data[index].region,
+                                population: data[index].population.toString(),
                               ),
                             ),
-                            const SizedBox(height: 12),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 8,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // 🇲🇽 Flag image
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.network(
+                                  country.flags?.png ?? '',
+                                  height: 100,
+                                  width: 140,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(
+                                        Icons.flag,
+                                        size: 50,
+                                        color: Colors.grey,
+                                      ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
 
-                            // 🌍 Country name
-                            Text(
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              country.name?.common ?? 'Unknown',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                              // 🌍 Country name
+                              Text(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                country.name?.common ?? 'Unknown',
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
 
-                            // 🌎 Region
-                            Text(
-                              country.region ?? '',
-                              style: const TextStyle(
-                                color: Colors.blueGrey,
-                                fontSize: 15,
+                              // 🌎 Region
+                              Text(
+                                country.region ?? '',
+                                style: const TextStyle(
+                                  color: Colors.blueGrey,
+                                  fontSize: 15,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -130,10 +147,31 @@ class Homescreen extends StatelessWidget {
               }
 
               if (state is CountryFlagFailure) {
-                return const Center(
-                  child: Text(
-                    "Failed to load countries 😞",
-                    style: TextStyle(fontSize: 16),
+                return Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        "Failed to load countries 😞",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                        ),
+                        onPressed: () {
+                          context.read<CountryFlagCubit>().get_Flags();
+                        },
+                        child: Text(
+                          "Retry",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 );
               }
