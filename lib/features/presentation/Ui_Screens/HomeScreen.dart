@@ -85,34 +85,39 @@ class Homescreen extends StatelessWidget {
                           );
                         },
                         child: Container(
+                          padding: const EdgeInsets.only(left: 12),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
+                                color: Colors.black12,
                                 blurRadius: 8,
                                 offset: const Offset(0, 3),
                               ),
                             ],
                           ),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               // 🇲🇽 Flag image
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.network(
-                                  country.flags?.png ?? '',
-                                  height: 100,
-                                  width: 140,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      const Icon(
-                                        Icons.flag,
-                                        size: 50,
-                                        color: Colors.grey,
-                                      ),
+                              Center(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    country.flags?.png ?? '',
+                                    height: 100,
+                                    width: 140,
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            const Icon(
+                                              Icons.flag,
+                                              size: 50,
+                                              color: Colors.grey,
+                                            ),
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 12),
@@ -157,6 +162,10 @@ class Homescreen extends StatelessWidget {
                       SizedBox(height: 20),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 5,
                           backgroundColor: Colors.blueAccent,
                         ),
                         onPressed: () {
